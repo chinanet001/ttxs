@@ -5,6 +5,7 @@ from .models import *
 from hashlib import sha1
 import datetime
 from .user_decorators import *
+from ttsx_goods import models
 # Create your views here.
 def register(request):
     context={'title':'注册','top':'0'}
@@ -51,7 +52,7 @@ def login_handle(request):
     s1.update(upwd)
     upwd_sha1=s1.hexdigest()
 
-    context = {'title': '登录','uname':uname,'upwd':upwd,'top':0}
+    context = {'title': '登录','uname':uname,'upwd':upwd,'top':'0'}
     #根据用户名查询数据，如果未查到返回[]，如果查到则返回[UserInfo]
     users=UserInfo.objects.filter(uname=uname)
     if len(users)==0:
@@ -81,9 +82,18 @@ def logout(request):
 
 @user_login
 def center(request):
-    user=UserInfo.objects.get(pk=request.session['uid'])
-    context={'title':'用户中心','user':user}
-    return render(request,'ttsx_user/center.html',context)
+    try:
+        user=UserInfo.objects.get(pk=request.session['uid'])
+        ids_zj = request.COOKIES.get('goods_ids')
+        ids_zj = [] if ids_zj is None else ids_zj.split(',')
+        goods_zj = []
+        for id in ids_zj:
+            goods_zj.append(models.GoodsInfo.objects.get(id=id))
+        context={'title':'用户中心','user':user,'goods_zj':goods_zj}
+        return render(request,'ttsx_user/center.html',context)
+    except Exception as e:
+        print(type(e), e)
+        return render(request, '404.html')
 @user_login
 def order(request):
     context={'title':'用户订单'}

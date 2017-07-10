@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='GoodsInfo',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', auto_created=True, primary_key=True, serialize=False)),
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', auto_created=True, serialize=False)),
                 ('gtitle', models.CharField(max_length=50)),
                 ('gpic', models.ImageField(upload_to='goods')),
                 ('gprice', models.DecimalField(max_digits=5, decimal_places=2)),
@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TypeInfo',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', auto_created=True, primary_key=True, serialize=False)),
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', auto_created=True, serialize=False)),
                 ('ttitle', models.CharField(max_length=20)),
                 ('isDelete', models.BooleanField(default=False)),
             ],
