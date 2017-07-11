@@ -29,6 +29,7 @@
 {%block detail%}{%endblock detail%}
 
 	<div class="main_wrap clearfix">
+		{% block right_left %}
 		<div class="l_wrap fl clearfix">
 			<div class="new_goods">
 				<h3>新品推荐</h3>
@@ -45,6 +46,7 @@
 		</div>
 
         {%block right%}{%endblock right%}
+		{% endblock right_left %}
 	</div>
 
 {%endblock body%}

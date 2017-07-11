@@ -90,3 +90,28 @@ def detail(request,id):
 购物车：模型类，视图，模板，列表页购买，详细页购买，
 订单：模型类，购买，事务处理
 '''
+
+from haystack.generic_views import SearchView
+
+class MySearchView(SearchView):
+    """My custom search view."""
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(MySearchView, self).get_context_data(*args, **kwargs)
+        # do something
+        context['title'] = '搜索商品列表页'
+        pindex1 = context['page_obj'].number
+        # 分页页码的列表
+        page_range = []
+        if context['paginator'].num_pages <= 5:
+            page_range = range(1, context['paginator'].num_pages + 1)
+        else:
+            if pindex1 <= 2:
+                page_range = range(1, 6)
+            elif pindex1 >= context['paginator'].num_pages - 1:
+                page_range = range(context['paginator'].num_pages - 4, context['paginator'].num_pages + 1)
+            else:
+                page_range = range(pindex1 - 2, pindex1 + 3)
+        context['page_range'] = page_range
+        print(context)
+        return context
