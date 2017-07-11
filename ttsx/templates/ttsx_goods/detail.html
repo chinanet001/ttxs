@@ -4,22 +4,40 @@
 <script type="text/javascript">
 	$(function () {
 		$('#add_cart').click(function(){
-			var $add_x = $('#add_cart').offset().top;
-			var $add_y = $('#add_cart').offset().left;
+			$.get('/user/islogin/',function(data){
+				if(data.islogin){
+					count = $('.num_show').val()
+					gid = $('#gid').val()
+					$.get('/cart/add/',{'gid':gid,'count':count},function(data){
+						if(data.is_add){
+							var $add_x = $('#add_cart').offset().top;
+							var $add_y = $('#add_cart').offset().left;
 
-			var $to_x = $('#show_count').offset().top;
-			var $to_y = $('#show_count').offset().left;
+							var $to_x = $('#show_count').offset().top;
+							var $to_y = $('#show_count').offset().left;
 
-			$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+							$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
 
-			$(".add_jump").stop().animate({
-				'left': $to_y+7,
-				'top': $to_x+7},
-				"fast", function() {
-					$(".add_jump").fadeOut('fast',function(){
-						$('#show_count').html(2);
+							$(".add_jump").stop().animate({
+								'left': $to_y+7,
+								'top': $to_x+7},
+								"fast", function() {
+									$(".add_jump").fadeOut('fast',function(){
+										$.get('/cart/count/',function(data){
+											$('#show_count').html(data.cart_count);
+										})
+									});
+							});
+						}else{
+							alert("购买失败，请稍后重试！")
+						}
 					});
-			});
+				}else{
+					location.href = "/user/login/"
+				}
+			})
+
+
 		})
 
 		$('.num_show').blur(function () {
@@ -79,6 +97,7 @@
 			<div class="goods_num clearfix">
 				<div class="num_name fl">数 量：</div>
 				<div class="num_add fl">
+					<input type="hidden" id="gid" value="{{goods.id}}">
 					<input type="text" class="num_show fl" value="1">
 					<input type="hidden" id="kucun" value="{{goods.gkucun}}">
 					<a href="javascript:;" class="add fr">+</a>

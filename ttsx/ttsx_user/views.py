@@ -80,6 +80,13 @@ def logout(request):
     request.session.flush()
     return redirect('/user/login/')
 
+def islogin(request):
+
+    if request.session.get('uid') is None:
+        return JsonResponse({'islogin':0})
+    else:
+        return JsonResponse({'islogin':1})
+
 @user_login
 def center(request):
     try:
@@ -110,6 +117,7 @@ def site(request):
         user.save()
     context={'title':'收货地址','user':user}
     return render(request,'ttsx_user/site.html',context)
+
 
 
 '''
