@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'ttsx_goods',
     'haystack',
     'ttsx_cart',
+    'ttsx_order',
 )
 
 MIDDLEWARE_CLASSES = (

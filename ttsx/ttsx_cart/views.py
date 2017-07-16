@@ -4,6 +4,7 @@ from .models import *
 from django.http import JsonResponse
 from django.db.models import Sum
 from ttsx_user.user_decorators import user_login
+from ttsx_user.models import UserInfo
 
 # Create your views here.
 
@@ -43,3 +44,29 @@ def index(request):
     uid = request.session.get('uid')
     context['cart_list'] = CartInfo.objects.filter(user_id=uid)
     return render(request, 'cart/cart.html', context)
+
+
+def edit(request):
+    id = int(request.GET.get('id'))
+    count = int(request.GET.get('count'))
+    cart = CartInfo.objects.get(id= id)
+    cart.count = count
+    cart.save()
+    return JsonResponse({'result':'ok'})
+
+
+def delete(request):
+    id = request.GET.get('id')
+    cart = CartInfo.objects.get(pk=id)
+    cart.delete()
+    return JsonResponse({'result': 'ok'})
+
+
+def order(request):
+    user = UserInfo.objects.get(pk=request.session.get('uid'))
+    cart_ids = request.POST.getlist('cart_id')
+    c_ids = ','.join(cart_ids)
+    cart_list = CartInfo.objects.filter(id__in=cart_ids)
+    context = {'title': '提交订单', 'user': user, 'cart_list': cart_list, 'c_ids': c_ids}
+    return render(request, 'cart/order.html', context)
+
